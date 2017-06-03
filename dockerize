@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 IMAGE_NAME="engit/nginx-php-mongo"
-CONTAINER_NAME="engit_nginx-php-mongo"
+CONTAINER_NAME="engit_nginx_php_mongo"
 
 PWD=$(pwd)
 
