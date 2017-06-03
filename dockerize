@@ -16,7 +16,7 @@ if [[ -z "$IS_IMAGE_CREATED" ]]; then
 fi
 
 if [[ -z "$IS_CONTAINER_CREATED" ]]; then
-    if [[ ! -z "$IS_CONTAINER_RUNNING" ]]; then
+    if [[ -z "$IS_CONTAINER_RUNNING" ]]; then
         echo "[-] Creating Container....."
         docker run -d -p 8080:80 -p 8081:27017 -v $PWD:/var/www/html --name $CONTAINER_NAME $IMAGE_NAME
     else
