@@ -3,24 +3,38 @@
 IMAGE_NAME="engit/nginx-php-mongo"
 CONTAINER_NAME="engit_nginx_php_mongo"
 
+
 PWD=$(pwd)
 
+if [ "$1" == "delete" ]; then
+    docker rm $CONTAINER_NAME &> /dev/null
+    echo "[-] Deleted container: $CONTAINER_NAME"
+    docker rmi $IMAGE_NAME &> /dev/null
+    echo "[-] Deleted image: $IMAGE_NAME"
+    exit
+fi
+
+if [ "$1" == "stop" ]; then
+    docker stop $CONTAINER_NAME &> /dev/null
+    echo "[-] Stopped container: $CONTAINER_NAME"
+    exit
+fi
 
 IS_IMAGE_CREATED=$(docker images --format "{{.Repository}}" | grep $IMAGE_NAME)
 IS_CONTAINER_CREATED=$(docker ps --format "{{.Names}}" | grep $CONTAINER_NAME)
-IS_CONTAINER_RUNNING=$(docker ps -a --format "{{.Names}}: {{.Status}}" | grep "^${CONTAINER_NAME}: Up")
+IS_CONTAINER_RUNNING=$(docker ps -a --format "{{.Names}}: {{.Status}}" | grep "^$CONTAINER_NAME: Up")
 
 if [[ -z "$IS_IMAGE_CREATED" ]]; then
     echo "[-] Dockerizing....."
     docker build -t $IMAGE_NAME .
 fi
 
-if [[ -z "$IS_CONTAINER_CREATED" ]]; then
-    if [[ -z "$IS_CONTAINER_RUNNING" ]]; then
+if [[ -z "$IS_CONTAINER_RUNNING" ]]; then
+    if [[ -z "$IS_CONTAINER_CREATED" ]]; then
         echo "[-] Creating Container....."
         docker run -d -p 8080:80 -p 8081:27017 -v $PWD:/var/www/html --name $CONTAINER_NAME $IMAGE_NAME
     else
-        docker start $CONTAINER_NAME
+        docker start $CONTAINER_NAME &> /dev/null
     fi
 fi
 
