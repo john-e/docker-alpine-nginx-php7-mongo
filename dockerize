@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
-IMAGE_NAME="engit/nginx-php-mongo"
-CONTAINER_NAME="engit_nginx_php_mongo"
-
-
 PWD=$(pwd)
+CONTAINER_NAME=$(basename $PWD | awk '{gsub(/[^a-zA-Z0-9]/, "_", $0); print tolower($0)}')
+IMAGE_NAME="engit/$CONTAINER_NAME"
 
 if [ "$1" == "delete" ]; then
     docker rm $CONTAINER_NAME &> /dev/null
